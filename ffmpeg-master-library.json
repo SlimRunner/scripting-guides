@@ -1,0 +1,70 @@
+{
+  "snippets": [
+    {
+      "author": {
+        "source": "https://youtu.be/Cb458PRJ43s?t=103",
+        "handle": "@TheHorizon2b2t",
+        "site": "Twitter",
+        "link": "https://twitter.com/TheHorizon2b2t/status/1669270006994173956?s=20"
+      },
+      "command": "ffmpeg -filter_complex \"nullsrc=s=1920x1080,geq=random(1)*255:128:128[vout]\" -map \"[vout]\" -t 46 -c:v libx264 out.mp4",
+      "purpose": "creates a roughly 1GB video of white noise"
+    },
+    {
+      "author": "myself",
+      "command": "ffmpeg -i giphy.gif -vsync 0 output%02d.png",
+      "purpose": "extracts all frames (?) from the gif",
+      "sources": [
+        "https://superuser.com/questions/135117/how-to-extract-one-frame-of-a-video-every-n-seconds-to-an-image/729351",
+        "https://superuser.com/questions/318845/improve-quality-of-ffmpeg-created-jpgs",
+        "https://ffmpeg.org/ffmpeg-bitstream-filters.html#mjpeg2jpeg",
+        "https://stackoverflow.com/questions/10957412/fastest-way-to-extract-frames-using-ffmpeg",
+        "https://stackoverflow.com/questions/39944653/android-split-gif-to-frames-with-ffmpeg"
+      ]
+    },
+    {
+      "author": "myself",
+      "command": "ffmpeg -i INPUT -filter:v \"crop=w:h:x:y\" OUTPUT",
+      "explanation": "cuts a rectangle whose top left corner origin is (x, y) and has a bisector (x + t*w, y + t*h)",
+      "purpose": "crop video to a desired (smaller) rectangular frame with given coordinates",
+      "sources": [
+        "https://video.stackexchange.com/a/4571"
+      ]
+    },
+    {
+      "author": "myself",
+      "command": [
+        "ffmpeg -i INPUT -s WxH [audio flag] OUTPUT",
+        "ffmpeg -i INPUT -filter:v scale=W:H [audio flag] OUTPUT"
+      ],
+      "explanation": [
+        "The -s flag scales the video to a width W and height H.",
+        "The scale video filter allows to do the same. In this case H or W can be set as -1 to retain original proportions."
+      ],
+      "purpose": "Re-scale video to a different size",
+      "sources": [
+        "https://superuser.com/a/624564"
+      ]
+    },
+    {
+      "author": "myself",
+      "command": [
+        "ffmpeg -framerate 30 -pattern_type glob -i \"*.png\" -c:v libx264 -pix_fmt yuv420p OUTPUT",
+        "ffmpeg -start_number START -i img-%03d.png -vframes COUNT OUTPUT",
+        "ffmpeg -r 60 -i \"img-\"%05d\".png\" -c:v libx264 -vf fps=60 -pix_fmt yuv420p output-horzgrid.mp4"
+      ],
+      "useful-extras": [
+        "ffmpeg ... -i ... -c:v libx264 -r 30 -pix_fmt yuv420p OUTPUT"
+      ],
+      "explanation": [
+        "creates video at 30 FPS by stiching together all PNG within a folder (lexicographic) in given format",
+        "creates by stiching together COUNT number of images with matching pattern starting at START",
+        "creates by stiching together all matching pattern images"
+      ],
+      "purpose": "Create video from images",
+      "sources": [
+        "https://stackoverflow.com/a/37478183"
+      ]
+    }
+  ]
+}
