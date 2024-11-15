@@ -112,21 +112,21 @@ git am /path/to/dir2/*.patch
 ## Updating Branch
 ### By Merging
 ```sh
-# update base branch
-git checkout main
-git pull origin main
-# start rebase
-git checkout my-branch
-git merge main
+# update target branch (if needed)
+git checkout SOURCE
+git pull origin SOURCE
+# start merge
+git checkout TARGET
+git merge SOURCE
 ```
 ### By Rebasing
 ```sh
-# update base branch
-git checkout main
-git pull origin main
+# update base branch (if needed)
+git checkout SOURCE
+git pull origin SOURCE
 # start rebase
-git checkout my-branch
-git rebase main
+git checkout TARGET
+git rebase SOURCE
 ```
 if already present upstream
 ```sh
