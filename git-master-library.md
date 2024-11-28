@@ -153,3 +153,22 @@ Simply run
 git config --global init.defaultBranch main
 ```
 if you want your new name to be main.
+
+## Backlog
+
+### Stash only unstaged files
+[stackoverflow question](https://stackoverflow.com/q/20028507)
+
+- [A1](https://stackoverflow.com/a/20028585)
+  - good if your goal is to definitely commit after you've tested
+- [A2](https://stackoverflow.com/a/34681302)
+  - decent if your goal is NOT to commit after you've tested (i.e. you need to bring your other changes before you commit)
+  - pro1 no need for clean up (temp files)
+  - con1 is that it creates a temporary commit
+  - con2 you might be unable to commit (commit hooks)
+- [A3](https://stackoverflow.com/a/24899847)
+  - does not use stash at all it simply creates a diff which you can remove and re-apply. After you're done you delete the diff
+  - pro1 very simple
+  - con1 creates a temporary file you must store somewhere
+  - con2 you have to delete the file after you're done
+  - note `-R` is short for `--reverse`
