@@ -1,31 +1,33 @@
 # Git Commands
 ## Outline
-- [apply patches](#apply-patches)
-- [brach prunning](#branch-prunning)
-- [patch reconstruction](#selective-reconstruction-by-patches)
-- [update branch](#updating-branch)
-- [count commits](#count-commits)
-- [config default branch name](#config-default-branch-name)
-- [zip git archive](#zip-git-archive)
-- [backlog](#backlog)
+- [Apply Patches](#apply-patches)
+- [Branch Prunning](#branch-prunning)
+- [Repo Reconstruction](#repo-reconstruction)
+- [Branch Update](#branch-update)
+- [Count Commits](#count-commits)
+- [Git Config](#git-config)
+- [Git Archives](#git-archives)
+- [Backlog](#backlog)
 
 ## Apply Patches
 ### From another branch into current
 ```sh
-git format-patch '<ref>'..'<ref>' --stdout | git apply -
+git checkout '<A>' # if you are not there already
+git format-patch '<C>~1'..'<B>' --stdout | git apply -
 ```
-I used this to apply changes from branch `A` to branch `B` where the commits look like follows:
+Apply changes between `C~1` and `B` to the working tree of `A`. Note that we _do not_ want to undo `A~1` so we cannot simply apply `B..A`.
 ```
-*   A
-|
-*
-| * B
-* | main
-|/
-* 
-|
+  * A
+  |
+  *
+  |
+  | * B
+  | |
+C * |
+  |/
+  * 
+  |
 ```
-However, I only want to apply to `A`'s working tree the changes that `B` would have applied to `main~1`, and without undoing `A~1` either.
 
 ## Branch Prunning
 Prune local branches that have already been merged upstream. First we remove the branches from origin
@@ -33,6 +35,7 @@ Prune local branches that have already been merged upstream. First we remove the
 git fetch --prune
 ```
 > BEFORE you do the following **checkout main**
+
 This deletes all local branches which have been merged upstream.
 ```sh
 git branch --merged origin/main | grep -v '^\*' | xargs -n 1 git branch -d
@@ -44,38 +47,42 @@ Optionally to remove **non-merged** branches that no longer exist in upstream
 git remote prune origin
 ```
 
-## Selective Reconstruction By Patches
+## Repo Reconstruction
 ### Goal
-Recreate a repo from one point in its history, and from there on apply a selected subset of patches (from the original repo) which contain _only_ diffs for a hand picked set of files.
+Recreate a repo from its root up to one commit in its history. From that point onwards generate patches for all commits (of the original repo), but filter the diffs such that _only_ changes for an arbitrary set of files is included.
 
-The commit order and original message should be preserved.
+The commit order and metadata should be preserved. To make things easier make two new directories for the two sets of patches.
 
 ### Commands
 ```sh
-git format-patch -'<n>' '<ref>' -o /path/to/dir1
+cd '<old_repo_path>'
+mkdir '<dir1>' '<dir2>'
+# generate unconditional patches
+git format-patch -'<n>' '<ref>' -o '<dir1>'
+# generate filtered patches
+git format-patch '<ref>'..HEAD -o '<dir2>' -- '<file_1>' '<file_2>' ... '<file_k>'
+mkdir '<new_repo_path>'
+cd '<new_repo_path>'
+git init
+# apply patches in new repo
+git am '<dir1>'
+git am '<dir2>'
 ```
-Here `<ref>` refers to the most recent commit whose ancestors you want to preserve (including the ref itself), and `<n>` is the number of ancestors plus 1. Ideally, use git's automatic numbering so that applying the patches becomes easier (since original order must be preserved).
+- `<ref>`: most recent commit you want to fully preserve along with all its ancestors
+- `<n>`: number of ancestors from `<ref>` to root.
+
 > NOTE: globbing in Unix shells order lexicographically.
 
-```sh
-git format-patch '<ref>'..HEAD -o /path/to/dir2 -- '<file1>' '<file2>' ... '<fileN>'
-```
-`<ref>` is the same as before, i.e. it refers to  the most recent commit whose ancestors you want to preserve. Then just list the files you want to filter by.
 
-You can inspect the contents of the patches without writing to files with
+Optionally, you may inspect the filtered patches with this command before you apply them
 ```sh
-git format-patch '<ref>'..HEAD --stdout -- '<file1>' '<file2>' ... '<fileN>' | less
-```
-
-Finally, in order to reconstruct:
-```sh
-git am /path/to/dir1/*.patch
-git am /path/to/dir2/*.patch
+git format-patch '<ref>'..HEAD --stdout -- '<file_1>' '<file_2>' ... '<file_k>' | less
 ```
 
 ### Example
-Consider the following commit history
+Consider the following commit history where `~/repo_old` and `~/repo_new` directories already exist.
 ```
+(latest commit)
 * C1 <- diff files: Y, Z, W, V
 |
 * C2 <- diff files: X, Y
@@ -90,28 +97,30 @@ Consider the following commit history
 |
 * C7 <- diff files: X
 |
-* H <- preserve this and all its parents
+* C8 <- preserve this and all its parents
 |
 *
 |
 *
+(root)
 ```
 
-We want to create a repo that contains all the commits from the oldest up to `H`. Then we want to apply subsequent commits _only if_ they changed file `X` or file `Y`. Further, in the case of `C5` the patch should exclude the diffs for `Z` and `V`.
-
-In this example we would run in the current repo
 ```sh
-git format-patch -3 H -o /path/to/dir1
-git format-patch H..HEAD -o /path/to/dir2 -- X Y
+cd ~/repo_old
+mkdir ../dir1 ../dir2
+# generate unconditional patches
+git format-patch -3 C8 -o ../dir1
+# generate filtered patches
+git format-patch C8..HEAD -o ../dir2 -- X Y
+cd ~/repo_new
+git init
+# apply patches in new repo
+git am '<dir1>'
+git am '<dir2>'
 ```
+Optionally, clean up the directories with the patches.
 
-Then in the new repo
-```sh
-git am /path/to/dir1/*.patch
-git am /path/to/dir2/*.patch
-```
-
-## Updating Branch
+## Branch Update
 ### By Merging
 ```sh
 # update target branch (if needed)
@@ -149,14 +158,16 @@ The above is true **ONLY IF** the history between the refs is linear. For non li
 
 reference: https://stackoverflow.com/a/31998123
 
-## Config Default Branch Name
+## Git Config
+### Config Default Branch Name
 Simply run
 ```sh
 git config --global init.defaultBranch main
 ```
 if you want your new name to be main.
 
-## Zip Git Archive
+## Git Archives
+### Zip Archive of Commited Changes only
 Create a zip out of the repo that includes only committed changes along the `.git` directory, and put it one folder up from current directory.
 ```sh
 git archive --format=zip --output=../'<name>'.zip '<ref>'
