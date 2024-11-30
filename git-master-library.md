@@ -10,7 +10,7 @@
 ## Apply Patches
 ### From another branch into current
 ```sh
-git format-patch <ref>..<ref> --stdout | git apply -
+git format-patch '<ref>'..'<ref>' --stdout | git apply -
 ```
 I used this to apply changes from branch `A` to branch `B` where the commits look like follows:
 ```
@@ -50,19 +50,19 @@ The commit order and original message should be preserved.
 
 ### Commands
 ```sh
-git format-patch -<n> <ref> -o /path/to/dir1
+git format-patch -'<n>' '<ref>' -o /path/to/dir1
 ```
 Here `<ref>` refers to the most recent commit whose ancestors you want to preserve (including the ref itself), and `<n>` is the number of ancestors plus 1. Ideally, use git's automatic numbering so that applying the patches becomes easier (since original order must be preserved).
 > NOTE: globbing in Unix shells order lexicographically.
 
 ```sh
-git format-patch <ref>..HEAD -o /path/to/dir2 -- <file1> <file2> ... <fileN>
+git format-patch '<ref>'..HEAD -o /path/to/dir2 -- '<file1>' '<file2>' ... '<fileN>'
 ```
 `<ref>` is the same as before, i.e. it refers to  the most recent commit whose ancestors you want to preserve. Then just list the files you want to filter by.
 
 You can inspect the contents of the patches without writing to files with
 ```sh
-git format-patch <ref>..HEAD --stdout -- <file1> <file2> ... <fileN> | less
+git format-patch '<ref>'..HEAD --stdout -- '<file1>' '<file2>' ... '<fileN>' | less
 ```
 
 Finally, in order to reconstruct:
