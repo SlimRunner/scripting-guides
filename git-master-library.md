@@ -6,6 +6,8 @@
 - [update branch](#updating-branch)
 - [count commits](#count-commits)
 - [config default branch name](#config-default-branch-name)
+- [zip git archive](#zip-git-archive)
+- [backlog](#backlog)
 
 ## Apply Patches
 ### From another branch into current
@@ -153,6 +155,16 @@ Simply run
 git config --global init.defaultBranch main
 ```
 if you want your new name to be main.
+
+## Zip Git Archive
+Create a zip out of the repo that includes only committed changes along the `.git` directory, and put it one folder up from current directory.
+```sh
+git archive --format=zip --output=../'<name>'.zip '<ref>'
+```
+
+> NOTE: the `--flag=value` syntax is optional. `--flag value` works as well.
+
+reference: https://git-scm.com/docs/git-archive
 
 ## Backlog
 
