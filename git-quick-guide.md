@@ -168,7 +168,7 @@ if you want your new name to be main.
 
 ## Git Archives
 ### Zip Archive of Commited Changes only
-Create a zip out of the repo that includes only committed changes along the `.git` directory, and put it one folder up from current directory.
+Create a zip out of the repo that includes only committed changes **without the `.git` directory**, and put it one folder up from current directory.
 ```sh
 git archive --format=zip --output=../'<name>'.zip '<ref>'
 ```
