@@ -158,6 +158,11 @@ The above is true **ONLY IF** the history between the refs is linear. For non li
 
 reference: https://stackoverflow.com/a/31998123
 
+### Count Filtered by Specific Files Changed
+```sh
+git rev-list --count A..B -- file1 file2 ... filen
+```
+
 ## Git Config
 ### Config Default Branch Name
 Simply run
