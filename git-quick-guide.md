@@ -200,3 +200,9 @@ reference: https://git-scm.com/docs/git-archive
   - con1 creates a temporary file you must store somewhere
   - con2 you have to delete the file after you're done
   - note `-R` is short for `--reverse`
+
+### Push tags upstream
+[stackoverflow answer](https://stackoverflow.com/a/5195913). Essentially use
+```bash
+git push origin tag '<tag_name>'
+```
