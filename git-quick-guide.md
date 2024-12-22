@@ -4,6 +4,7 @@
 - [Branch Prunning](#branch-prunning)
 - [Repo Reconstruction](#repo-reconstruction)
 - [Branch Update](#branch-update)
+- [Fix Branch](#fix-branch)
 - [Count Commits](#count-commits)
 - [Git Config](#git-config)
 - [Git Archives](#git-archives)
@@ -143,6 +144,47 @@ git rebase TARGET
 if already present upstream
 ```sh
 git push --force-with-lease
+```
+
+## Fix Branch
+### Mistakely Add Commits to Merged Branch
+Branch `A` was merged to main. `A` has `n` commits mistakenly added  to it. They were meant to go in another branch whose base is `main` (the merge point of `A`). There is also a tag at the `HEAD` of `A`. Assumption is made that nothing has been pushed to origin.
+```
+A * tag-1
+  |
+ ...
+  |
+  *
+  |
+  | * main
+  |/
+  *
+```
+Run the following
+```sh
+git checkout A
+git branch B
+# make sure your git status is clean
+git reset --hard HEAD~'<n>'
+# checkout main and pull (if needed)
+git checkout B
+git rebase main
+git tag -f tag-1
+git checkout main
+git merge --ff-only B
+git branch -D B
+```
+results in
+```
+  * main, tag-1
+  |
+ ...
+  |
+  *
+  |
+  *
+  |
+A *
 ```
 
 ## Count Commits
