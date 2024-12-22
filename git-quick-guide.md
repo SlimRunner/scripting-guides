@@ -31,22 +31,16 @@ C * |
 ```
 
 ## Branch Prunning
-Prune local branches that have already been merged upstream. First we remove the branches from origin
+Prune local branches that have already been merged upstream. Then remove all local branches that have been merged to main. Optionally, you may remove non-merged branches that do not exist in origin.
 ```sh
+# remove branches from origin
 git fetch --prune
-```
-> BEFORE you do the following **checkout main**
-
-This deletes all local branches which have been merged upstream.
-```sh
+git checkout main # IMPORTANT
+# see below for explanation
 git branch --merged origin/main | grep -v '^\*' | xargs -n 1 git branch -d
+# git remote prune origin # optional
 ```
 The first comand in the pipeline marks with `*` the branches have _not_ been merged into your current one (the one that is checked out). **Hence why it is important that you checkout main**. Then, `grep` filters out the ones with asterisk. Finally, `xargs` passes at most one argument from each line in `stdin` to `git branch -d`.
-
-Optionally to remove **non-merged** branches that no longer exist in upstream
-```sh
-git remote prune origin
-```
 
 ## Repo Reconstruction
 ### Goal
