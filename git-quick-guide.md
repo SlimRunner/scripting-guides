@@ -121,23 +121,24 @@ git am '<dir2>'
 Optionally, clean up the directories with the patches.
 
 ## Branch Update
+In the two strategies below always keep in mind that when updating a branch from `main`, `SOURCE` is `main`. `TARGET` is always the branch getting new commits or commit.
 ### By Merging
 ```sh
-# update target branch (if needed)
-git checkout SOURCE
-git pull origin SOURCE
+# update target and/or source (if needed)
+git checkout '<ref>'
+git pull origin '<ref>'
 # start merge
-git checkout TARGET
-git merge SOURCE
+git checkout SOURCE
+git merge TARGET
 ```
 ### By Rebasing
 ```sh
-# update base branch (if needed)
-git checkout SOURCE
-git pull origin SOURCE
+# update target and/or source (if needed)
+git checkout '<ref>'
+git pull origin '<ref>'
 # start rebase
-git checkout TARGET
-git rebase SOURCE
+git checkout SOURCE
+git rebase TARGET
 ```
 if already present upstream
 ```sh
