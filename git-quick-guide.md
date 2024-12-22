@@ -13,10 +13,10 @@
 ## Apply Patches
 ### From another branch into current
 ```sh
-git checkout <A> # if you are not there already
-git format-patch <C>~1..<B> --stdout | git apply -
+git checkout A # if you are not there already
+git format-patch C~1..B --stdout | git apply -
 ```
-Apply changes between `C~1` and `B` to the working tree of `A`. Note that we _do not_ want to undo `A~1` so we cannot simply apply `B..A`.
+Apply changes between `C~1` and `B` to the working tree of `A`. Note that we _do not_ want to undo `A~1` or `C` so we cannot simply apply `B..A` as a patch.
 ```
   * A
   |
@@ -44,7 +44,7 @@ The first comand in the pipeline marks with `*` the branches have _not_ been mer
 
 ## Repo Reconstruction
 ### Goal
-Recreate a repo from its root up to one commit in its history. From that point onwards generate patches for all commits (of the original repo), but filter the diffs such that _only_ changes for an arbitrary set of files is included.
+Recreate a repo from its root up to one commit in its history. From that point onwards generate patches for all commits (of the original repo), but filter the diffs such that _only_ the changes of an arbitrary set of files is included.
 
 The commit order and metadata should be preserved. To make things easier make two new directories for the two sets of patches.
 
