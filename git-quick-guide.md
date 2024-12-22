@@ -13,8 +13,8 @@
 ## Apply Patches
 ### From another branch into current
 ```sh
-git checkout '<A>' # if you are not there already
-git format-patch '<C>~1'..'<B>' --stdout | git apply -
+git checkout <A> # if you are not there already
+git format-patch <C>~1..<B> --stdout | git apply -
 ```
 Apply changes between `C~1` and `B` to the working tree of `A`. Note that we _do not_ want to undo `A~1` so we cannot simply apply `B..A`.
 ```
@@ -50,18 +50,18 @@ The commit order and metadata should be preserved. To make things easier make tw
 
 ### Commands
 ```sh
-cd '<old_repo_path>'
-mkdir '<dir1>' '<dir2>'
+cd <old_repo_path>
+mkdir <dir1> <dir2>
 # generate unconditional patches
-git format-patch -'<n>' '<ref>' -o '<dir1>'
+git format-patch -<n> <ref> -o <dir1>
 # generate filtered patches
-git format-patch '<ref>'..HEAD -o '<dir2>' -- '<file_1>' '<file_2>' ... '<file_k>'
-mkdir '<new_repo_path>'
-cd '<new_repo_path>'
+git format-patch <ref>..HEAD -o <dir2> -- <file_1> <file_2> ... <file_k>
+mkdir <new_repo_path>
+cd <new_repo_path>
 git init
 # apply patches in new repo
-git am '<dir1>'
-git am '<dir2>'
+git am <dir1>
+git am <dir2>
 ```
 - `<ref>`: most recent commit you want to fully preserve along with all its ancestors
 - `<n>`: number of ancestors from `<ref>` to root.
@@ -71,7 +71,7 @@ git am '<dir2>'
 
 Optionally, you may inspect the filtered patches with this command before you apply them
 ```sh
-git format-patch '<ref>'..HEAD --stdout -- '<file_1>' '<file_2>' ... '<file_k>' | less
+git format-patch <ref>..HEAD --stdout -- <file_1> <file_2> ... <file_k> | less
 ```
 
 ### Example
@@ -110,18 +110,18 @@ git format-patch C8..HEAD -o ../dir2 -- X Y
 cd ~/repo_new
 git init
 # apply patches in new repo
-git am '<dir1>'
-git am '<dir2>'
+git am ~/dir1
+git am ~/dir2
 ```
 Optionally, clean up the directories with the patches.
 
 ## Branch Update
-In the two strategies below always keep in mind that when updating a branch from `main`, `SOURCE` is `main`. `TARGET` is always the branch getting new commits or commit.
+In the two strategies below always keep in mind that when updating a branch from `main` (`main` has changed since the branching), `SOURCE` is `main`. `TARGET` is always the branch getting new commits.
 ### By Merging
 ```sh
 # update target and/or source (if needed)
-git checkout '<ref>'
-git pull origin '<ref>'
+git checkout <ref>
+git pull origin <ref>
 # start merge
 git checkout SOURCE
 git merge TARGET
@@ -129,8 +129,8 @@ git merge TARGET
 ### By Rebasing
 ```sh
 # update target and/or source (if needed)
-git checkout '<ref>'
-git pull origin '<ref>'
+git checkout <ref>
+git pull origin <ref>
 # start rebase
 git checkout SOURCE
 git rebase TARGET
@@ -159,8 +159,9 @@ Run the following
 git checkout A
 git branch B
 # make sure your git status is clean
-git reset --hard HEAD~'<n>'
-# checkout main and pull (if needed)
+git reset --hard HEAD~<n>
+git checkout main
+git pull origin main
 git checkout B
 git rebase main
 git tag -f tag-1
@@ -188,7 +189,7 @@ git rev-list --count A..B
 ```
 If `A` is `B` itself or `B`'s child, then the result will always be 0. For a concrete example, the following should result in the number `n`
 ```sh
-git rev-list --count HEAD~n..HEAD
+git rev-list --count HEAD~<n>..HEAD
 ```
 
 The above is true **ONLY IF** the history between the refs is linear. For non linear histories git will count _all nodes_ which connect `A` and `B` in the same fashion of exluding `A` and including `B`.
@@ -212,7 +213,7 @@ if you want your new name to be main.
 ### Zip Archive of Commited Changes only
 Create a zip out of the repo that includes only committed changes **without the `.git` directory**, and put it one folder up from current directory.
 ```sh
-git archive --format=zip --output=../'<name>'.zip '<ref>'
+git archive --format=zip --output=../<name>.zip <ref>
 ```
 
 > NOTE: the `--flag=value` syntax is optional. `--flag value` works as well.
@@ -241,5 +242,5 @@ reference: https://git-scm.com/docs/git-archive
 ### Push tags upstream
 [stackoverflow answer](https://stackoverflow.com/a/5195913). Essentially use
 ```bash
-git push origin tag '<tag_name>'
+git push origin tag <tag_name>
 ```
