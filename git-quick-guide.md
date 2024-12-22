@@ -172,7 +172,7 @@ git rebase main
 git tag -f tag-1
 git checkout main
 git merge --ff-only B
-git branch -D B
+git branch -d B
 ```
 results in
 ```
