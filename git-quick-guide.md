@@ -123,8 +123,8 @@ In the two strategies below always keep in mind that when updating a branch from
 git checkout <ref>
 git pull origin <ref>
 # start merge
-git checkout SOURCE
-git merge TARGET
+git checkout TARGET
+git merge SOURCE
 ```
 ### By Rebasing
 ```sh
@@ -132,8 +132,8 @@ git merge TARGET
 git checkout <ref>
 git pull origin <ref>
 # start rebase
-git checkout SOURCE
-git rebase TARGET
+git checkout TARGET
+git rebase SOURCE
 ```
 if already present upstream
 ```sh
