@@ -52,9 +52,9 @@ The commit order and metadata should be preserved. To make things easier make tw
 ```sh
 cd <old_repo_path>
 mkdir <dir1> <dir2>
-# generate unconditional patches
-git format-patch -<n> <ref> -o <dir1>
-# generate filtered patches
+# generate unconditional patches (includes <ref>)
+git format-patch --root <ref> -o <dir1>
+# generate filtered patches (ignores <ref>)
 git format-patch <ref>..HEAD -o <dir2> -- <file_1> <file_2> ... <file_k>
 mkdir <new_repo_path>
 cd <new_repo_path>
@@ -104,7 +104,7 @@ Consider the following commit history where `~/repo_old` and `~/repo_new` direct
 cd ~/repo_old
 mkdir ../dir1 ../dir2
 # generate unconditional patches
-git format-patch -3 C8 -o ../dir1
+git format-patch --root C8 -o ../dir1
 # generate filtered patches
 git format-patch C8..HEAD -o ../dir2 -- X Y
 cd ~/repo_new
